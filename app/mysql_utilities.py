@@ -40,16 +40,18 @@ CREATE TABLE IF NOT EXISTS `bookings` (
 AUTO_INCREMENT=1 ;
 """
 
-connection = pymysql.connect(
-    host="localhost",
-    user="user",
-    password="passwd",
-    database="db",
-    cursorclass=pymysql.cursors.DictCursor,
-)
+def create_connection():
+    return pymysql.connect(
+        host="localhost",
+        user="user",
+        password="passwd",
+        database="db",
+        cursorclass=pymysql.cursors.DictCursor,
+    )
 
 
 def create_tables():
+    connection = create_connection()
     with connection:
         with connection.cursor() as cursor:
             cursor.execute(create_table_customer_sql)
@@ -57,6 +59,7 @@ def create_tables():
             cursor.execute(create_table_booking_sql)
 
 def create_customer_data(email, name):
+    connection = create_connection()
     with connection.cursor() as cursor:
         sql = "INSERT INTO `customers` (`email`, `name`) VALUES (%s, %s)"
         cursor.execute(sql, (email, name))
@@ -64,6 +67,7 @@ def create_customer_data(email, name):
 
 
 def update_customer_data(customer_id, email, name):
+    connection = create_connection()
     with connection.cursor() as cursor:
         sql = "UPDATE `customers` SET email=%s, name=%s WHERE `id`=%s"
         cursor.execute(sql, (email, name, customer_id))
@@ -71,6 +75,7 @@ def update_customer_data(customer_id, email, name):
 
 
 def get_customer_data(customer_id=None, email=None):
+    connection = create_connection()
     with connection.cursor() as cursor:
 
         if email:
@@ -89,6 +94,7 @@ def get_customer_data(customer_id=None, email=None):
 
 
 def delete_customer_data(customer_id=None, email=None):
+    connection = create_connection()
     with connection.cursor() as cursor:
         if customer_id:
             cursor.execute("DELETE FROM `customers` WHERE `id`=%s", (customer_id,))
@@ -107,6 +113,6 @@ if __name__ == "__main__":
     # print(get_customer(email="test@gmail.com"))
     # print(get_customer(customer_id=1))
     
-    delete_customer_data(3)
-    print(get_customer_data(customer_id=3))
+    # delete_customer_data(3)
+    # print(get_customer_data(customer_id=3))
     pass

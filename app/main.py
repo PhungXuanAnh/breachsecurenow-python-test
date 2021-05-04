@@ -43,4 +43,5 @@ def delete_customer(customer_id):
     return jsonify(get_customer_data(customer_id))
 
 if __name__ == '__main__':
+    create_tables()
     app.run(host='0.0.0.0', port=8001, debug=True)
